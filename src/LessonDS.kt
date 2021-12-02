@@ -9,7 +9,78 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        merge()
+        maxProfit()
+    }
+
+    fun maxProfit() {
+        // 输入：[7,1,5,3,6,4]
+        // 输出：5
+        // 解释：在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+        // 注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+        println(maxProfit(intArrayOf(7, 1, 5, 3, 6, 4)))
+
+        // 输入：prices = [7,6,4,3,1]
+        // 输出：0
+        // 解释：在这种情况下, 没有交易完成, 所以最大利润为 0。
+        println(maxProfit(intArrayOf(7, 6, 4, 3, 1)))
+
+        println(maxProfit(intArrayOf(5, 1, 1, 2, 3, 0)))
+
+    }
+
+    /**
+     * 121. 买卖股票的最佳时机
+     * 给定一个数组 prices ，它的第i个元素prices[i] 表示一支给定股票第 i 天的价格。
+     * 你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。
+     * 设计一个算法来计算你所能获取的最大利润。
+     * 返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+     */
+    fun maxProfit(prices: IntArray): Int {
+        var min = Int.MAX_VALUE
+        var result = 0
+        prices.forEach {
+            if (min > it) {
+                min = it
+            } else {
+                result = Math.max(result, it - min)
+            }
+        }
+        return result
+    }
+
+    fun intersect() {
+        // 输入：nums1 = [1,2,2,1], nums2 = [2,2]
+        // 输出：[2,2]
+        println(intersect(intArrayOf(1, 2, 2, 1), intArrayOf(2, 2)).contentToString())
+
+        // 输入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+        // 输出：[4,9]
+        println(intersect(intArrayOf(4, 9, 5), intArrayOf(9, 4, 9, 8, 4)).contentToString())
+    }
+
+    /**
+     * 350. 两个数组的交集 II
+     * 给你两个整数数组nums1 和 nums2 ，请你以数组形式返回两数组的交集。
+     * 返回结果中每个元素出现的次数，应与元素在两个数组中都出现的次数一致（如果出现次数不一致，则考虑取较小值）。
+     * 可以不考虑输出结果的顺序。
+     */
+    fun intersect(nums1: IntArray, nums2: IntArray): IntArray {
+        val map = HashMap<Int, Int>()
+        nums1.forEach {
+            val value = map[it]
+            map[it] = if (value != null) value + 1 else 1
+        }
+
+        val list = mutableListOf<Int>()
+        nums2.forEach {
+            val value = map[it]
+            if (value != null && value != 0) {
+                map[it] = value - 1
+                list.add(it)
+            }
+        }
+
+        return list.toIntArray()
     }
 
     fun merge() {
