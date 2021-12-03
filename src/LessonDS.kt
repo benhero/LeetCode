@@ -9,8 +9,123 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        maxProfit()
+        generate()
     }
+
+    fun generate() {
+        generate(6).log()
+    }
+
+    /**
+     * 118. 杨辉三角
+     * 给定一个非负整数 numRows，生成「杨辉三角」的前 numRows 行。
+     * 在「杨辉三角」中，每个数是它左上方和右上方的数的和。
+     */
+    fun generate(numRows: Int): List<List<Int>> {
+        // 按照杨辉三角原理去计算除了头尾之外的即可
+        val list = mutableListOf<List<Int>>()
+        for (i in 0 until numRows) {
+            val jj = mutableListOf<Int>()
+            list.add(jj)
+            for (j in 0..i) {
+                if (j == 0 || j == i) {
+                    jj.add(1)
+                } else {
+                    jj.add(list[i - 1][j - 1] + list[i - 1][j])
+                }
+            }
+        }
+        return list
+    }
+
+    fun matrixReshape() {
+        "[".log()
+        matrixReshape(arrayOf(intArrayOf(1, 2), intArrayOf(3, 4)), 2, 2).forEach {
+            it.log()
+        }
+        "]".log()
+    }
+
+    /**
+     * 566. 重塑矩阵
+     * 在 MATLAB 中，有一个非常有用的函数 reshape ，它可以将一个m x n 矩阵重塑为另一个大小不同（r x c）的新矩阵，
+     * 但保留其原始数据。
+     * 给你一个由二维数组 mat 表示的m x n 矩阵，以及两个正整数 r 和 c ，分别表示想要的重构的矩阵的行数和列数。
+     * 重构后的矩阵需要将原始矩阵的所有元素以相同的 行遍历顺序 填充。
+     * 如果具有给定参数的 reshape 操作是可行且合理的，则输出新的重塑矩阵；否则，输出原始矩阵。
+     */
+    fun matrixReshape(mat: Array<IntArray>, r: Int, c: Int): Array<IntArray> {
+        // 1. 循环迭代原始数组去填充新的矩阵
+//        if (mat[0].size * mat.size != r * c) {
+//            return mat
+//        }
+//        val result = Array(r) { IntArray(c) }
+//        var x = 0
+//        var y = 0
+//        result[y] = IntArray(c)
+//        mat.forEach { m ->
+//            m.forEach {
+//                result[y][x] = it
+//                x++
+//                if (x >= c) {
+//                    x = 0
+//                    y++
+//                }
+//            }
+//        }
+
+        // 2. 把原有的看成一维数组去计算
+        val x = mat[0].size
+        val y = mat.size
+        if (x * y != r * c) {
+            return mat
+        }
+        val result = Array(r) { IntArray(c) }
+        for (i in 0 until x * y) {
+            result[i / c][i % c] = mat[i / y][i % y]
+        }
+
+        return result
+    }
+
+    fun maxSubArray2() {
+        maxSubArray2(intArrayOf(1, 5, 2, 4, 3)).log()
+    }
+
+    /**
+     * 返回最长的递增子序列（不需要连续）的长度
+     */
+    fun maxSubArray2(nums: IntArray): Int {
+        nums.log()
+        return 1
+    }
+
+    fun maxSubArray() {
+        // 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+        // 输出：6
+        // 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+
+        // 输入：nums = [1]
+        // 输出：1
+
+        // 输入：nums = [0]
+        // 输出：0
+
+        // 输入：nums = [-1]
+        // 输出：-1
+
+        // 输入：nums = [-100000]
+        // 输出：-100000
+    }
+
+    /**
+     * 53. 最大子序和
+     *
+     * 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+     */
+//    fun maxSubArray(nums: IntArray): Int {
+//
+//    }
 
     fun maxProfit() {
         // 输入：[7,1,5,3,6,4]
@@ -229,33 +344,6 @@ object LessonDS {
 //        }
 //        return false
     }
-
-    fun maxSubArray() {
-        // 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
-        // 输出：6
-        // 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
-
-        // 输入：nums = [1]
-        // 输出：1
-
-        // 输入：nums = [0]
-        // 输出：0
-
-        // 输入：nums = [-1]
-        // 输出：-1
-
-        // 输入：nums = [-100000]
-        // 输出：-100000
-    }
-
-    /**
-     * 53. 最大子序和
-     *
-     * 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
-     */
-//    fun maxSubArray(nums: IntArray): Int {
-//
-//    }
 
     class Node(var value: Int) {
         var next: Node? = null
