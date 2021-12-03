@@ -4,12 +4,12 @@
  * @author Benhero
  * @date   2021-12-02
  */
-fun Number.log() {
-    println(this)
+fun IntArray.log() {
+    this.contentToString().log()
 }
 
-fun IntArray.log() {
-    println(this.contentToString())
+fun CharArray.log() {
+    this.contentToString().log()
 }
 
 fun Any.log() {

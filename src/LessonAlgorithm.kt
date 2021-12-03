@@ -1,3 +1,5 @@
+import java.lang.StringBuilder
+
 /**
  *
  * 算法
@@ -8,7 +10,85 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        twoSum()
+        reverseWords()
+    }
+
+    fun reverseWords() {
+        // 输入："Let's take LeetCode contest"
+        // 输出："s'teL ekat edoCteeL tsetnoc"
+        // 提示：在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格。
+        reverseWords("Let's take LeetCode contest").log()
+        reverseWords("I love u").log()
+    }
+
+    /**
+     * 557. 反转字符串中的单词 III
+     * 给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+     */
+    fun reverseWords(s: String): String {
+//        var wordLength = 0
+//        val builder = StringBuilder()
+//        s.forEachIndexed { index, c ->
+//            if (c == ' ') {
+//                if (wordLength != 0) {
+//                    // 词的结尾
+//                    val l = index - wordLength
+//                    var r = index - 1
+//                    while (l <= r) {
+//                        builder.append(s[r])
+//                        r--
+//                    }
+//                }
+//                wordLength = 0
+//                builder.append(' ')
+//            } else if (index == s.length - 1) {
+//                // 词的结尾
+//                val l = index - wordLength
+//                var r = index
+//                while (l <= r) {
+//                    builder.append(s[r])
+//                    r--
+//                }
+//            } else {
+//                wordLength++
+//            }
+//        }
+//        return builder.toString()
+
+        val array = s.split(" ")
+        val sb = StringBuilder(s.length)
+        for (item in array) {
+            sb.append(item.reversed()).append(" ")
+        }
+        return sb.toString().trim()
+    }
+
+    fun reverseString() {
+        // 输入：s = ["h","e","l","l","o"]
+        // 输出：["o","l","l","e","h"]
+
+        // 输入：s = ["H","a","n","n","a","h"]
+        // 输出：["h","a","n","n","a","H"]
+        reverseString(charArrayOf('h', 'e', 'l', 'l', 'o'))
+        reverseString(charArrayOf('H', 'a', 'n', 'n', 'a', 'h'))
+    }
+
+    /**
+     * 344. 反转字符串
+     * 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 s 的形式给出。
+     * 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题。
+     */
+    fun reverseString(s: CharArray) {
+        var l = 0
+        var r = s.size - 1
+        while (l < r) {
+            val temp = s[l]
+            s[l] = s[r]
+            s[r] = temp
+            l++
+            r--
+        }
+        s.log()
     }
 
     fun twoSum() {
