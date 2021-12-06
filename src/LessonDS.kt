@@ -9,7 +9,7 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        generate()
+        maxSubArray2()
     }
 
     fun generate() {
@@ -89,15 +89,32 @@ object LessonDS {
     }
 
     fun maxSubArray2() {
-        maxSubArray2(intArrayOf(1, 5, 2, 4, 3)).log()
+        maxSubArray2(intArrayOf(1, 5, 2, 4, 3, 3, 4)).log()
     }
 
     /**
      * 返回最长的递增子序列（不需要连续）的长度
      */
     fun maxSubArray2(nums: IntArray): Int {
-        nums.log()
-        return 1
+        val map = hashMapOf<Int, Int>()
+        nums.reverse()
+        nums.forEach {
+            var max = 0
+            map.forEach { k, v ->
+                if (it <= k) {
+                    max = Math.max(v, max)
+                }
+            }
+            map[it] = max + 1
+        }
+        var max = 0
+        map.forEach { t, u ->
+            println("$t : $u")
+        }
+        map.values.forEach {
+            max = Math.max(max, it)
+        }
+        return max
     }
 
     fun maxSubArray() {
