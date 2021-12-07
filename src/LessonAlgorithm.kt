@@ -10,7 +10,103 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        reverseWords()
+        removeNthFromEnd()
+    }
+
+    fun removeNthFromEnd() {
+        // 输入：head = [1,2,3,4,5], n = 2
+        // 输出：[1,2,3,5]
+        removeNthFromEnd(arrayToListNodeList(intArrayOf(1, 2, 3, 4, 5)), 2)?.log()
+
+        // 输入：head = [1], n = 1
+        // 输出：[]
+        removeNthFromEnd(arrayToListNodeList(intArrayOf(1)), 1)?.log()
+
+        // 输入：head = [1,2], n = 1
+        // 输出：[1]
+        removeNthFromEnd(arrayToListNodeList(intArrayOf(1, 2, 3)), 3)?.log()
+    }
+
+    /**
+     * 19. 删除链表的倒数第 N 个结点
+     * 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+     */
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        // 通过n来保持距离，先移动n位，然后保持lastNode和targetNode的距离为n往右移动，
+        // lastNode停下来时就是倒数第n个节点
+        val leadNode = ListNode(n)
+        leadNode.next = head
+        var lastNode: ListNode? = leadNode
+        var target = leadNode
+        var listSize = 0
+        for (i in 0 until n) {
+            lastNode = lastNode?.next
+            listSize++
+        }
+
+        while (lastNode?.next != null) {
+            lastNode = lastNode.next
+            target = target.next!!
+        }
+        target.next = target.next?.next
+
+        return leadNode.next
+    }
+
+    fun middleNode() {
+        // 输入：[1,2,3,4,5]
+        // 输出：此列表中的结点 3 (序列化形式：[3,4,5])
+
+        // 输入：[1,2,3,4,5,6]
+        // 输出：此列表中的结点 4 (序列化形式：[4,5,6])
+
+        middleNode(arrayToListNodeList(intArrayOf(1)))?.log()
+        middleNode(arrayToListNodeList(intArrayOf(1, 2, 3, 4, 5)))?.log()
+        middleNode(arrayToListNodeList(intArrayOf(1, 2, 3, 4, 5, 6)))?.log()
+    }
+
+    /**
+     * 876. 链表的中间结点
+     * 给定一个头结点为 head 的非空单链表，返回链表的中间结点。
+     * 如果有两个中间结点，则返回第二个中间结点。
+     * Example:
+     * var li = ListNode(5)
+     * var v = li.`val`
+     */
+    fun middleNode(head: ListNode?): ListNode? {
+        var slow = head
+        var fast = head
+        while (fast?.next != null) {
+            slow = slow?.next
+            fast = fast.next?.next
+        }
+        return slow
+    }
+
+    fun arrayToListNodeList(array: IntArray): ListNode? {
+        val head: ListNode = ListNode(-1)
+        var index: ListNode = head
+        array.forEach {
+            index.next = ListNode(it)
+            index = index.next!!
+        }
+        return head.next
+    }
+
+    class ListNode(var `val`: Int) {
+        var next: ListNode? = null
+
+        fun log() {
+            print("[")
+            print(`val`)
+            var n: ListNode? = next
+            while (n != null) {
+                print(" , ")
+                print(n.`val`)
+                n = n.next
+            }
+            println("]")
+        }
     }
 
     fun reverseWords() {
