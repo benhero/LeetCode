@@ -9,7 +9,137 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        maxSubArray2()
+        setZeroes()
+    }
+
+    /**
+     * 73. 矩阵置零
+     * 给定一个 m x n 的矩阵，如果一个元素为 0 ，则将其所在行和列的所有元素都设为 0 。请使用 原地 算法。
+     */
+    fun setZeroes() {
+        // 输入：matrix = [[1,1,1],[1,0,1],[1,1,1]]
+        // 输出：[[1,0,1],[0,0,0],[1,0,1]]
+        setZeroes(
+            arrayOf(
+                intArrayOf(1, 1, 1),
+                intArrayOf(1, 0, 1),
+                intArrayOf(1, 1, 1)
+            )
+        )
+
+        // 输入：matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+        // 输出：[[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+        setZeroes(
+            arrayOf(
+                intArrayOf(0, 1, 2, 0),
+                intArrayOf(3, 4, 5, 2),
+                intArrayOf(1, 3, 1, 5)
+            )
+        )
+    }
+
+    fun setZeroes(matrix: Array<IntArray>): Unit {
+        val m = matrix.size
+        val n = matrix[0].size
+
+        val row = BooleanArray(m)
+        val columns = BooleanArray(n)
+
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                val value = matrix[i][j]
+                if (value == 0) {
+                    row[i] = true
+                    columns[j] = true
+                }
+            }
+        }
+
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (row[i] || columns[j]) {
+                    matrix[i][j] = 0
+                }
+            }
+        }
+
+        matrix.forEach {
+            print('[')
+            for (c in it) {
+                print("$c , ")
+            }
+            println(']')
+        }
+    }
+
+    fun isValidSudoku() {
+//        isValidSudoku(
+//            arrayOf(
+//                charArrayOf('5', '3', '.', '.', '7', '.', '.', '.', '.')
+//                , charArrayOf('6', '.', '.', '1', '9', '5', '.', '.', '.')
+//                , charArrayOf('.', '9', '8', '.', '.', '.', '.', '6', '.')
+//                , charArrayOf('8', '.', '.', '.', '6', '.', '.', '.', '3')
+//                , charArrayOf('4', '.', '.', '8', '.', '3', '.', '.', '1')
+//                , charArrayOf('7', '.', '.', '.', '2', '.', '.', '.', '6')
+//                , charArrayOf('.', '6', '.', '.', '.', '.', '2', '8', '.')
+//                , charArrayOf('.', '.', '.', '4', '1', '9', '.', '.', '5')
+//                , charArrayOf('.', '.', '.', '.', '8', '.', '.', '7', '9')
+//            )
+//        ).log()
+
+        isValidSudoku(
+            arrayOf(
+                charArrayOf('5', '3', '.', '.', '7', '.', '.', '.', '.'),
+                charArrayOf('6', '.', '.', '1', '9', '5', '.', '.', '.'),
+                charArrayOf('.', '9', '8', '.', '.', '.', '.', '6', '.'),
+                charArrayOf('8', '.', '.', '.', '6', '.', '.', '.', '3'),
+                charArrayOf('4', '.', '.', '8', '.', '3', '.', '.', '1'),
+                charArrayOf('7', '.', '.', '.', '2', '.', '.', '.', '6'),
+                charArrayOf('.', '6', '.', '.', '.', '.', '2', '8', '.'),
+                charArrayOf('.', '.', '.', '4', '1', '9', '.', '.', '5'),
+                charArrayOf('.', '.', '.', '.', '8', '.', '.', '7', '9')
+            )
+        ).log()
+    }
+
+    /**
+     * 36. 有效的数独
+     * 请你判断一个 9 x 9 的数独是否有效。只需要 根据以下规则 ，验证已经填入的数字是否有效即可。
+     */
+    fun isValidSudoku(board: Array<CharArray>): Boolean {
+        val row = Array(9) { CharArray(9) }
+        val columns = Array(9) { CharArray(9) }
+        val subboxes = Array(9) { CharArray(9) }
+        board.forEach {
+            print('[')
+            for (c in it) {
+                print("$c , ")
+            }
+            println(']')
+        }
+        for (i in 0..8) {
+            for (j in 0..8) {
+                val c = board[i][j]
+                if (c == '.') {
+                    continue
+                }
+                val index = i / 3 * 3 + j / 3
+                val value = c - '0'
+                val src = 0.toChar()
+                val a = row[i][value - 1] != src
+                val b = columns[j][value - 1] != src
+                val d = subboxes[index][value - 1] != src
+                if (a || b || d) {
+                    // false : false : true : 6 : 3 : 4 : 6
+                    println("$a : $b : $d : $i : $j : $index : $value")
+                    return false
+                }
+                row[i][value - 1] = value.toChar()
+                columns[j][value - 1] = value.toChar()
+                subboxes[index][value - 1] = value.toChar()
+            }
+        }
+        return true
     }
 
     fun generate() {
