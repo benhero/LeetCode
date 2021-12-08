@@ -9,7 +9,96 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        isAnagram()
+        removeElements()
+    }
+
+    fun removeElements() {
+        // 输入：head = [1,2,6,3,4,5,6], val = 6
+        // 输出：[1,2,3,4,5]
+        removeElements(arrayToListNodeList(intArrayOf(1, 2, 6, 3, 4, 5, 6)), 6)?.log()
+
+        // 输入：head = [], val = 1
+        // 输出：[]
+        removeElements(arrayToListNodeList(intArrayOf()), 1)?.log()
+
+        // 输入：head = [7,7,7,7], val = 7
+        // 输出：[]
+        removeElements(arrayToListNodeList(intArrayOf(7, 7, 7, 7)), 7)?.log()
+    }
+
+    /**
+     * 203. 移除链表元素
+     * 给你一个链表的头节点 head 和一个整数 val ，请你删除链表中所有满足 Node.val == val 的节点，并返回 新的头节点 。
+     */
+    fun removeElements(head: ListNode?, `val`: Int): ListNode? {
+        var index = ListNode(-1)
+        val temp = index
+        index.next = head
+
+        while (index.next != null) {
+            if (index.next?.`val` == `val`) {
+                index.next = index.next?.next
+            } else {
+                index = index.next!!
+            }
+        }
+
+        return temp.next
+    }
+
+    fun mergeTwoLists() {
+        mergeTwoLists(arrayToListNodeList(intArrayOf()), arrayToListNodeList(intArrayOf()))?.log()
+        mergeTwoLists(arrayToListNodeList(intArrayOf()), arrayToListNodeList(intArrayOf(5)))?.log()
+        mergeTwoLists(arrayToListNodeList(intArrayOf(1, 2, 4)), arrayToListNodeList(intArrayOf(1)))?.log()
+        mergeTwoLists(arrayToListNodeList(intArrayOf(1, 4, 7, 19, 828)), arrayToListNodeList(intArrayOf(5)))?.log()
+    }
+
+    /**
+     * 21. 合并两个有序链表
+     * 将两个升序链表合并为一个新的 升序 链表并返回。
+     * 新链表是通过拼接给定的两个链表的所有节点组成的。
+     */
+    fun mergeTwoLists(list1: ListNode?, list2: ListNode?): ListNode? {
+        var result = ListNode(-1)
+        val head = result
+        var l1 = list1
+        var l2 = list2
+
+        while (l1 != null && l2 != null) {
+            if (l1.`val` <= l2.`val`) {
+                result.next = l1
+                l1 = l1.next
+            } else {
+                result.next = l2
+                l2 = l2.next
+            }
+            result = result.next!!
+        }
+
+        result.next = l1 ?: l2
+
+        return head.next
+    }
+
+    /**
+     * 141. 环形链表
+     * 给你一个链表的头节点 head ，判断链表中是否有环。
+     * 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。
+     * 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+     * 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+     * 如果链表中存在环，则返回 true 。 否则，返回 false 。
+     */
+    fun hasCycle(head: ListNode?): Boolean {
+        var slow = head
+        var fast = head
+        while (fast?.next?.next != null) {
+            fast = fast.next?.next
+            slow = slow?.next
+            if (fast == slow) {
+                return true
+            }
+        }
+        return false
     }
 
     fun isAnagram() {
@@ -656,5 +745,31 @@ object LessonDS {
             index = index.next!!
         }
         return head.next
+    }
+
+    fun arrayToListNodeList(array: IntArray): ListNode? {
+        val head: ListNode = ListNode(-1)
+        var index: ListNode = head
+        array.forEach {
+            index.next = ListNode(it)
+            index = index.next!!
+        }
+        return head.next
+    }
+
+    class ListNode(var `val`: Int) {
+        var next: ListNode? = null
+
+        fun log() {
+            print("[")
+            print(`val`)
+            var n: ListNode? = next
+            while (n != null) {
+                print(" , ")
+                print(n.`val`)
+                n = n.next
+            }
+            println("]")
+        }
     }
 }

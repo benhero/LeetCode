@@ -334,24 +334,24 @@ object Test {
      * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
      */
     fun mergeTwoLists(l1: ListNode?, l2: ListNode?): ListNode? {
-        var index1 = l1
-        var index2 = l2
+        var l1 = l1
+        var l2 = l2
 
         val preHead = ListNode(Int.MIN_VALUE)
-        var prev = preHead
+        var result = preHead
 
-        while (index1 != null && index2 != null) {
-            if (index1.`val` <= index2.`val`) {
-                prev.next = index1
-                index1 = index1.next
+        while (l1 != null && l2 != null) {
+            if (l1.`val` <= l2.`val`) {
+                result.next = l1
+                l1 = l1.next
             } else {
-                prev.next = index2
-                index2 = index2.next
+                result.next = l2
+                l2 = l2.next
             }
-            prev = prev.next!!
+            result = result.next!!
         }
 
-        prev.next = index1 ?: index2
+        result.next = l1 ?: l2
         return preHead.next
     }
 
