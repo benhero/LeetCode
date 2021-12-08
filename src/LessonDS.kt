@@ -9,7 +9,147 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        setZeroes()
+        isAnagram()
+    }
+
+    fun isAnagram() {
+        // 输入: s = "anagram", t = "nagaram"
+        // 输出: true
+        isAnagram("anagram", "nagaram").log()
+
+        // 输入: s = "rat", t = "car"
+        // 输出: false
+        isAnagram("rat", "car").log()
+    }
+
+    /**
+     * 242. 有效的字母异位词
+     * 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+     * 注意：若s 和 t中每个字符出现的次数都相同，则称s 和 t互为字母异位词。
+     */
+    fun isAnagram(s: String, t: String): Boolean {
+        if (s.length != t.length) {
+            return false
+        }
+        val map = IntArray(26)
+        s.forEach {
+            map[it - 'a']++
+        }
+        t.forEach {
+            map[it - 'a']--
+            if (map[it - 'a'] < 0) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun canConstruct() {
+        //输入：ransomNote = "a", magazine = "b"
+        //输出：false
+
+        //输入：ransomNote = "aa", magazine = "ab"
+        //输出：false
+
+        //输入：ransomNote = "aa", magazine = "aab"
+        //输出：true
+        canConstruct("aa", "baa").log()
+    }
+
+    /**
+     * 383. 赎金信
+     * 为了不在赎金信中暴露字迹，从杂志上搜索各个需要的字母，组成单词来表达意思。
+     * 给你一个赎金信 (ransomNote) 字符串和一个杂志(magazine)字符串，
+     * 判断 ransomNote 能不能由 magazines 里面的字符构成。
+     * 如果可以构成，返回 true ；否则返回 false 。
+     * magazine 中的每个字符只能在 ransomNote 中使用一次。
+     */
+    fun canConstruct(ransomNote: String, magazine: String): Boolean {
+        if (ransomNote.length > magazine.length) {
+            return false
+        }
+//        1. HashMap存储
+//        val map = HashMap<Char, Int>()
+//        magazine.forEach {
+//            map[it] = map[it]?.plus(1) ?: 1
+//        }
+//        ransomNote.forEach {
+//            val value = map[it]
+//            if (value == null) {
+//                return false
+//            } else {
+//                if (value < 1) {
+//                    return false
+//                }
+//                map[it] = value - 1
+//            }
+//        }
+//        return true
+
+        // 2. 数组存储
+        val map = IntArray(26)
+        magazine.forEach {
+            map[it - 'a']++
+        }
+        ransomNote.forEach {
+            map[it - 'a']--
+            if (map[it - 'a'] < 0) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun firstUniqChar() {
+        // s = "leetcode"
+        // 返回 0
+        firstUniqChar("leetcode").log()
+
+        // s = "loveleetcode"
+        // 返回 2
+        firstUniqChar("loveleetcode").log()
+
+    }
+
+    /**
+     * 387. 字符串中的第一个唯一字符
+     * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+     */
+    fun firstUniqChar(s: String): Int {
+        // 记录每个字母的出现次数，然后找出第一个次数为1的
+//        val map = LinkedHashMap<Char, Int>()
+//        s.forEach {
+//            map[it] = map[it]?.plus(1) ?: 1
+//        }
+//        map.keys.forEach {
+//            if (map[it] == 1) {
+//                it.log()
+//                return s.indexOf(it)
+//            }
+//        }
+//        return -1
+
+        // 记录每个字母在字符串中的位置，如果非第一次出现，则置为-1
+        val map = HashMap<Char, Int>()
+        s.forEachIndexed { index, c ->
+            if (map[c] == null) {
+                // 第一次出现
+                map[c] = index
+            } else {
+                map[c] = -1
+            }
+        }
+        var result = -1
+        map.forEach { t, u ->
+            if (u != -1) {
+                if (result == -1) {
+                    result = u
+                } else {
+                    result = Math.min(result, u)
+                }
+            }
+        }
+        return result
     }
 
     /**
