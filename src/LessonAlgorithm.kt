@@ -10,7 +10,117 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        removeNthFromEnd()
+        checkInclusion()
+    }
+
+    fun checkInclusion() {
+        // 输入：s1 = "ab" s2 = "eidbaooo"
+        // 输出：true
+        // 解释：s2 包含 s1 的排列之一 ("ba").
+        checkInclusion("ab", "eidbaooo").log()
+
+        checkInclusion("ab", "cba").log()
+
+        // 输入：s1= "ab" s2 = "eidboaoo"
+        // 输出：false
+        checkInclusion("ab", "eidboaoo").log()
+
+        checkInclusion("hello", "ooolleoooleh").log()
+    }
+
+    /**
+     * 567. 字符串的排列
+     * 给你两个字符串s1和s2 ，写一个函数来判断 s2 是否包含 s1的排列。
+     * 如果是，返回 true ；否则，返回 false 。
+     * 换句话说，s1 的排列之一是 s2 的 子串 。
+     */
+    fun checkInclusion(s1: String, s2: String): Boolean {
+        val map = HashMap<Char, Int>()
+        s1.forEach {
+            map[it] = if (map[it] == null) 1 else map[it]!!.plus(1)
+        }
+        var r = 0
+        for (i in s2.indices) {
+            r = Math.max(i, r)
+            while (r < s2.length && map.containsKey(s2[r]) && map[s2[r]]!! > 0) {
+                map[s2[r]] = map[s2[r]]!!.minus(1)
+
+                var temp = 0
+                map.values.forEach {
+                    temp += it
+                }
+                if (temp == 0) {
+                    return true
+                }
+                r++
+            }
+            if (map[s2[i]] != null) {
+                map[s2[i]] = map[s2[i]]!! + 1
+            }
+        }
+        return false
+    }
+
+    fun lengthOfLongestSubstring() {
+        lengthOfLongestSubstring("tmmzuxt").log()
+
+        // 输入: s = "abcabcbb"
+        // 输出: 3
+        // 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+        lengthOfLongestSubstring("abcabcbb").log()
+
+
+        // 输入: s = "bbbbb"
+        // 输出: 1
+        // 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+        lengthOfLongestSubstring("bbbbb").log()
+
+        // 输入: s = "pwwkew"
+        // 输出: 3
+        // 解释: 因为无重复字符的最长子串是"wke"，所以其长度为 3。
+        // 请注意，你的答案必须是 子串 的长度，"pwke"是一个子序列，不是子串。
+        lengthOfLongestSubstring("pwwkew").log()
+
+        // 输入: s = ""
+        // 输出: 0
+        lengthOfLongestSubstring("").log()
+    }
+
+    /**
+     * 3. 无重复字符的最长子串
+     * 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
+     */
+    fun lengthOfLongestSubstring(s: String): Int {
+        var l = 0
+        var r = 0
+        var maxLength = 0
+        val map = HashMap<Char, Int>()
+        while (r < s.length) {
+            // 判断是否为非重复字符串
+            val rightValue = s[r]
+//            "$r : $rightValue".log()
+            if (map[rightValue] == null || map[rightValue] == -1) {
+                map[rightValue] = r
+                maxLength = Math.max(r - l + 1, maxLength)
+//                println(
+//                    """ Match: $l  :  $r  : ${s.subSequence(l, r + 1)}""".trimIndent()
+//                )
+                r++
+            } else {
+//                println(
+//                    """ No : $l  :  $r  : ${s.subSequence(l, r + 1)}""".trimIndent()
+//                )
+                val newL = map[rightValue]!! + 1
+                // 清空新旧重复字符之间的位置值
+                for (i in l until newL) {
+                    map[s[i]] = -1
+                }
+                map[rightValue] = r
+                l = newL
+                r++
+            }
+        }
+        return maxLength
     }
 
     fun removeNthFromEnd() {
