@@ -1,6 +1,7 @@
 import java.util.*
 import kotlin.collections.HashMap
 
+
 /**
  *
  * 数据结构
@@ -12,7 +13,90 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        testMyQueue()
+        testTraversal()
+    }
+
+    fun testTraversal() {
+        var ti = TreeNode(5)
+        var v = ti.`val`
+        // 输入：root = [1,null,2,3]
+        // 输出：[1,2,3]
+
+        // 输入：root = []
+        // 输出：[]
+
+        // 输入：root = [1]
+        // 输出：[1]
+
+        // 输入：root = [1,2]
+        // 输出：[1,2]
+
+        // 输入：root = [1,null,2]
+        // 输出：[1,2]
+        val root = TreeNode(1)
+        root.right = TreeNode(2)
+        Solution().preorderTraversal(null).log()
+
+    }
+
+    class Solution {
+        val result = arrayListOf<Int>()
+
+        /**
+         * 144. 二叉树的前序遍历
+         * 给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+         */
+        fun preorderTraversal(root: TreeNode?): List<Int> {
+            root?.`val`?.let { result.add(it) }
+            root?.left?.let { preorderTraversal(it) }
+            root?.right?.let { preorderTraversal(it) }
+            return result
+        }
+
+        /**
+         * 94. 二叉树的中序遍历
+         */
+        fun inorderTraversal(root: TreeNode?): List<Int> {
+            root?.left?.let { inorderTraversal(it) }
+            root?.`val`?.let { result.add(it) }
+            root?.right?.let { inorderTraversal(it) }
+            return result
+        }
+
+        /**
+         * 145. 二叉树的后序遍历
+         */
+        fun postorderTraversal(src: TreeNode?): List<Int>? {
+            var node: TreeNode? = src ?: return result
+
+            val stack: Deque<TreeNode?> = LinkedList()
+            var prev: TreeNode? = null
+            while (node != null || !stack.isEmpty()) {
+                while (node != null) {
+                    // 深入到最左边的节点
+                    stack.push(node)
+                    node = node.left
+                }
+                // 由于上面为空时跳出，所以需要取出来最后一个左节点
+                node = stack.pop()
+
+                if (node!!.right == null || node.right === prev) {
+                    // 右子树为空，直接加自身，然后将自己标记为已经加入过了，也就是prev，往上跳
+                    result.add(node.`val`)
+                    prev = node
+                    node = null
+                } else {
+                    stack.push(node)
+                    node = node.right
+                }
+            }
+            return result
+        }
+    }
+
+    class TreeNode(var `val`: Int) {
+        var left: TreeNode? = null
+        var right: TreeNode? = null
     }
 
     fun testMyQueue() {
@@ -32,12 +116,12 @@ object LessonDS {
         // [null, null, null, 1, 1, false]
 
         // 解释：
-         val myQueue = MyQueue();
-         myQueue.push(1); // queue is: [1]
-         myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
-         myQueue.peek().log(); // return 1
-         myQueue.pop().log(); // return 1, queue is [2]
-         myQueue.empty().log(); // return false
+        val myQueue = MyQueue();
+        myQueue.push(1); // queue is: [1]
+        myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
+        myQueue.peek().log(); // return 1
+        myQueue.pop().log(); // return 1, queue is [2]
+        myQueue.empty().log(); // return false
 
     }
 
