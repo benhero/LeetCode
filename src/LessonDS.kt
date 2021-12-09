@@ -1,3 +1,6 @@
+import java.util.*
+import kotlin.collections.HashMap
+
 /**
  *
  * 数据结构
@@ -9,7 +12,138 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        deleteDuplicates()
+        testMyQueue()
+    }
+
+    fun testMyQueue() {
+        /**
+         * Your MyQueue object will be instantiated and called as such:
+         * var obj = MyQueue()
+         * obj.push(x)
+         * var param_2 = obj.pop()
+         * var param_3 = obj.peek()
+         * var param_4 = obj.empty()
+         */
+
+        // 输入：
+        // ["MyQueue", "push", "push", "peek", "pop", "empty"]
+        // [[], [1], [2], [], [], []]
+        // 输出：
+        // [null, null, null, 1, 1, false]
+
+        // 解释：
+         val myQueue = MyQueue();
+         myQueue.push(1); // queue is: [1]
+         myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
+         myQueue.peek().log(); // return 1
+         myQueue.pop().log(); // return 1, queue is [2]
+         myQueue.empty().log(); // return false
+
+    }
+
+    /**
+     * 232. 用栈实现队列
+     * 请你仅使用两个栈实现先入先出队列。队列应当支持一般队列支持的所有操作（push、pop、peek、empty）：
+     * 你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
+     */
+    class MyQueue() {
+        val list = arrayListOf<Int>()
+
+        /**
+         * 将元素 x 推到队列的末尾
+         */
+        fun push(x: Int) {
+            list.add(x)
+        }
+
+        /**
+         * 从队列的开头移除并返回元素
+         */
+        fun pop(): Int {
+            return if (list.isNotEmpty()) {
+                val i = list[0]
+                list.removeAt(0)
+                i
+            } else -1
+        }
+
+        /**
+         * 返回队列开头的元素
+         */
+        fun peek(): Int {
+            return if (list.isNotEmpty()) {
+                val i = list[0]
+                i
+            } else -1
+        }
+
+        /**
+         * 如果队列为空，返回 true ；否则，返回 false
+         */
+        fun empty(): Boolean {
+            return list.isEmpty()
+        }
+    }
+
+    fun isValid() {
+        // 输入：s = "()"
+        // 输出：true
+        isValid("()").log()
+
+        // 输入：s = "()[]{}"
+        // 输出：true
+        isValid("()[]{}").log()
+
+        // 输入：s = "(]"
+        // 输出：false
+        isValid("(]").log()
+
+        // 输入：s = "([)]"
+        // 输出：false
+        isValid("([)]").log()
+
+        // 输入：s = "{[]}"
+        // 输出：true
+        isValid("{[]}").log()
+
+        isValid("]").log()
+    }
+
+    /**
+     * 20. 有效的括号
+     * 给定一个只包括 '('，')'，'{'，'}'，'['，']'的字符串 s ，判断字符串是否有效。
+     * 有效字符串需满足：
+     * 左括号必须用相同类型的右括号闭合。
+     * 左括号必须以正确的顺序闭合。
+     */
+    fun isValid(s: String): Boolean {
+        val stack = Stack<Char>()
+        s.forEach {
+            when (it) {
+                '(', '[', '{' -> {
+                    stack.push(it)
+                }
+                ')' -> {
+                    if (stack.isEmpty() || stack.pop() != '(') {
+                        return false
+                    }
+                }
+                ']' -> {
+                    if (stack.isEmpty() || stack.pop() != '[') {
+                        return false
+                    }
+                }
+                '}' -> {
+                    if (stack.isEmpty() || stack.pop() != '{') {
+                        return false
+                    }
+                }
+                else -> {
+
+                }
+            }
+        }
+        return stack.isEmpty()
     }
 
     fun deleteDuplicates() {
