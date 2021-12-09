@@ -9,7 +9,66 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        removeElements()
+        deleteDuplicates()
+    }
+
+    fun deleteDuplicates() {
+        // 输入：head = [1,1,2]
+        // 输出：[1,2]
+        deleteDuplicates(createListNodeList(1, 1, 2))?.log()
+
+        // 输入：head = [1,1,2,3,3]
+        // 输出：[1,2,3]
+        deleteDuplicates(createListNodeList(1, 1, 2, 3, 3))?.log()
+
+        deleteDuplicates(createListNodeList(1, 1, 1))?.log()
+    }
+
+    /**
+     * 83. 删除排序链表中的重复元素
+     * 存在一个按升序排列的链表，给你这个链表的头节点 head ，请你删除所有重复的元素，使每个元素 只出现一次 。
+     * 返回同样按升序排列的结果链表。
+     */
+    fun deleteDuplicates(head: ListNode?): ListNode? {
+        var index = head
+        while (index?.next != null) {
+            if (index.`val` == index.next?.`val`) {
+                index.next = index.next?.next
+            } else {
+                index = index.next
+            }
+        }
+        return head
+    }
+
+    fun reverseList() {
+        // 输入：head = [1,2,3,4,5]
+        // 输出：[5,4,3,2,1]
+        reverseList(arrayToListNodeList(intArrayOf(1, 2, 3, 4, 5)))?.log()
+
+        // 输入：head = [1,2]
+        // 输出：[2,1]
+        reverseList(arrayToListNodeList(intArrayOf(2, 1)))?.log()
+
+        // 输入：head = []
+        // 输出：[]
+        reverseList(arrayToListNodeList(intArrayOf()))?.log()
+    }
+
+    /**
+     * 206. 反转链表
+     * 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+     */
+    fun reverseList(head: ListNode?): ListNode? {
+        var cur: ListNode? = null
+        var next = head
+        while (next != null) {
+            val temp = next.next
+            next.next = cur
+            cur = next
+            next = temp
+        }
+        return cur
     }
 
     fun removeElements() {
@@ -745,6 +804,10 @@ object LessonDS {
             index = index.next!!
         }
         return head.next
+    }
+
+    fun createListNodeList(vararg elements: Int): ListNode? {
+        return arrayToListNodeList(elements)
     }
 
     fun arrayToListNodeList(array: IntArray): ListNode? {
