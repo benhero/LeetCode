@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -13,7 +14,136 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        testTraversal()
+        isSymmetric()
+    }
+
+    fun isSymmetric() {
+        isSymmetric(arrayToTreeNode(1, 2, 2, 3, 4, 4, 3)).log()
+        isSymmetric(arrayToTreeNode(1, 2, 2, null, 3, null, 3)).log()
+    }
+
+    /**
+     * 101. 对称二叉树
+     * 给定一个二叉树，检查它是否是镜像对称的。
+     */
+    fun isSymmetric(root: TreeNode?): Boolean {
+        return isSymmetric(root?.left, root?.right)
+    }
+
+    fun isSymmetric(left: TreeNode?, right: TreeNode?): Boolean {
+        if (left == null && right == null) {
+            return true
+        }
+        if (left == null || right == null) {
+            return false
+        }
+        return left.`val` == right.`val` && isSymmetric(left.left, right.right) && isSymmetric(left.right, right.left)
+    }
+
+    fun maxDepth() {
+        // 二叉树：[3,9,20,null,null,15,7]
+        // 深度为3
+        val arrayToTreeNode = arrayToTreeNode(3, 9, 20, null, null, 15, 7)
+        maxDepth(arrayToTreeNode).log()
+    }
+
+    /**
+     * 104. 二叉树的最大深度
+     * 给定一个二叉树，找出其最大深度。
+     * 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+     * 说明: 叶子节点是指没有子节点的节点。
+     */
+    var maxDepth = 0
+    fun maxDepth(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        dfsMaxDepth(root, 1)
+        return maxDepth
+    }
+
+    fun dfsMaxDepth(node: TreeNode?, deep: Int) {
+        maxDepth = Math.max(maxDepth, deep)
+        if (node?.left != null) {
+            dfsMaxDepth(node.left, deep + 1)
+        }
+        if (node?.right != null) {
+            dfsMaxDepth(node.right, deep + 1)
+        }
+    }
+
+    fun levelOrder() {
+        // 二叉树：[3,9,20,null,null,15,7]
+        // [ [3],  [9,20],  [15,7] ]
+        val arrayToTreeNode = arrayToTreeNode(3, 9, 20, null, null, 15, 7)
+        levelOrder(arrayToTreeNode).forEach { it.log() }
+    }
+
+    /**
+     * 102. 二叉树的层序遍历
+     * 给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+     */
+    fun levelOrder(root: TreeNode?): List<List<Int>> {
+        // 临时队列，用于缓存待遍历的节点
+        val queue = LinkedList<TreeNode>()
+        val result = arrayListOf<ArrayList<Int>>()
+        if (root == null) {
+            return result
+        }
+        queue.add(root)
+        while (queue.isNotEmpty()) {
+            val list = arrayListOf<Int>()
+            val size = queue.size
+
+            for (i in 0 until size) {
+                // 移除头部节点
+                val node = queue.removeFirst()
+                list.add(node.`val`)
+                node.left?.let {
+                    // 找到下一层的节点，并加入到待遍历的队列
+                    queue.add(it)
+
+                }
+                node.right?.let {
+                    queue.add(it)
+                }
+            }
+            result.add(list)
+        }
+        return result
+
+
+//        val queue = ArrayList<TreeNode>()
+//        val result = arrayListOf<ArrayList<Int>>()
+//        root?.let {
+//            queue.add(it)
+//            result.add(arrayListOf(root.`val`))
+//        }
+//        while (queue.isNotEmpty()) {
+//            val list = arrayListOf<Int>()
+//            val size = queue.size
+//
+//            for (i in 0 until size) {
+//                val node = queue[i]
+//                node.left?.let {
+//                    // 找到下一层的节点，并加入到待遍历的队列，同时添加到结果队列中
+//                    queue.add(it)
+//                    list.add(it.`val`)
+//                }
+//                node.right?.let {
+//                    queue.add(it)
+//                    list.add(it.`val`)
+//                }
+//            }
+//            // 移除已经遍历完成的节点
+//            for (i in 0 until size) {
+//                queue.removeAt(0)
+//            }
+//            if (list.isNotEmpty()) {
+//                result.add(list)
+//            }
+//        }
+//        return result
     }
 
     fun testTraversal() {
@@ -97,6 +227,36 @@ object LessonDS {
     class TreeNode(var `val`: Int) {
         var left: TreeNode? = null
         var right: TreeNode? = null
+    }
+
+    fun arrayToTreeNode(vararg array: Int?): TreeNode {
+        val linkedList = LinkedList<TreeNode>()
+        val root = TreeNode(array[0]!!)
+        if (array.size == 1) {
+            return root
+        }
+        linkedList.add(root)
+
+        var i = 1
+        while (i < array.size) {
+            var node = array[i]?.let { TreeNode(it) }
+            val removeFirst = linkedList.removeFirst()
+
+            removeFirst.left = node
+            node?.let { linkedList.add(it) }
+
+            i++
+            if (i == array.size) {
+                break
+            }
+
+            node = array[i]?.let { TreeNode(it) }
+            removeFirst.right = node
+            i++
+            node?.let { linkedList.add(it) }
+        }
+
+        return root
     }
 
     fun testMyQueue() {
