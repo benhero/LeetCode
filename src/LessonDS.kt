@@ -14,7 +14,7 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        searchBST()
+        maxSubArray()
     }
 
     fun searchBST() {
@@ -1021,18 +1021,23 @@ object LessonDS {
         // 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
         // 输出：6
         // 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+        maxSubArray(intArrayOf(-2, 1, -3, 4, -1, 2, 1, -5, 4)).log()
 
         // 输入：nums = [1]
         // 输出：1
+        maxSubArray(intArrayOf(1)).log()
 
         // 输入：nums = [0]
         // 输出：0
+        maxSubArray(intArrayOf(0)).log()
 
         // 输入：nums = [-1]
         // 输出：-1
+        maxSubArray(intArrayOf(-1)).log()
 
         // 输入：nums = [-100000]
         // 输出：-100000
+        maxSubArray(intArrayOf(-100000)).log()
     }
 
     /**
@@ -1040,9 +1045,15 @@ object LessonDS {
      *
      * 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
      */
-//    fun maxSubArray(nums: IntArray): Int {
-//
-//    }
+    fun maxSubArray(nums: IntArray): Int {
+        var maxValue = nums[0]
+        var preValue = 0
+        nums.forEachIndexed { index, i ->
+            preValue = if (preValue > 0) preValue + i else i
+            maxValue = Math.max(maxValue, preValue)
+        }
+        return maxValue
+    }
 
     fun maxProfit() {
         // 输入：[7,1,5,3,6,4]
