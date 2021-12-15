@@ -14,7 +14,87 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        isSymmetric()
+        hasPathSum()
+    }
+
+    fun hasPathSum() {
+        hasPathSum(arrayToTreeNode(5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1), 22).log()
+        hasPathSum(arrayToTreeNode(1, 2, 3), 5).log()
+        hasPathSum(arrayToTreeNode(), 0).log()
+    }
+
+    /**
+     * 112. 路径总和
+     *
+     * 给你二叉树的根节点root 和一个表示目标和的整数targetSum 。
+     * 判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和targetSum 。
+     * 如果存在，返回 true ；否则，返回 false 。
+     * 叶子节点 是指没有子节点的节点。
+     */
+    fun hasPathSum(root: TreeNode?, targetSum: Int): Boolean {
+        if (root == null) {
+            return false
+        }
+        val queue = LinkedList<TreeNode>()
+        val sumList = LinkedList<Int>()
+        queue.add(root)
+        sumList.add(root.`val`)
+        while (queue.isNotEmpty()) {
+            val pop = queue.pop()
+            val value = sumList.pop()
+            if (pop.left == null && pop.right == null) {
+                //叶子节点判断
+                if (value == targetSum) {
+                    return true
+                } else {
+
+                }
+            } else {
+                pop.left?.let {
+                    queue.add(it)
+                    sumList.add(value + it.`val`)
+                }
+
+                pop.right?.let {
+                    queue.add(it)
+                    sumList.add(value + it.`val`)
+                }
+            }
+        }
+        return false
+    }
+
+    fun invertTree() {
+        invertTree(arrayToTreeNode(4, 2, 7, 1, 3, 6, null))?.log()
+    }
+
+    /**
+     * 226. 翻转二叉树
+     */
+    fun invertTree(root: TreeNode?): TreeNode? {
+        if (root == null) {
+            return null
+        }
+
+        // 方案1：遍历 - 广度遍历
+//        val queue = LinkedList<TreeNode>()
+//        queue.add(root)
+//        while (queue.isNotEmpty()) {
+//            val pop = queue.pop()
+//            pop.left?.let { queue.add(it) }
+//            pop.right?.let { queue.add(it) }
+//            val temp = pop.left
+//            pop.left = pop.right
+//            pop.right = temp
+//        }
+
+        // 方案2：递归
+        val left = invertTree(root.left)
+        val right = invertTree(root.right)
+        root.left = right
+        root.right = left
+
+        return root
     }
 
     fun isSymmetric() {
@@ -229,7 +309,10 @@ object LessonDS {
         var right: TreeNode? = null
     }
 
-    fun arrayToTreeNode(vararg array: Int?): TreeNode {
+    fun arrayToTreeNode(vararg array: Int?): TreeNode? {
+        if (array.isEmpty()) {
+            return null
+        }
         val linkedList = LinkedList<TreeNode>()
         val root = TreeNode(array[0]!!)
         if (array.size == 1) {
