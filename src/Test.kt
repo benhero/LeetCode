@@ -10,7 +10,54 @@ import kotlin.math.sqrt
 object Test {
     @JvmStatic
     fun main(args: Array<String>) {
-        testMyLinkedList()
+        fourSum()
+    }
+
+    fun fourSum() {
+        // 输入：nums = [1,0,-1,0,-2,2], target = 0
+        // 输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+//        fourSum(intArrayOf(1, 0, -1, 0, -2, 2), 0).forEach { it.log() }
+
+        // 输入：nums = [2,2,2,2,2], target = 8
+        // 输出：[[2,2,2,2]]
+//        fourSum(intArrayOf(2, 2, 2, 2, 2), 8).forEach { it.log() }
+
+        fourSum(intArrayOf(-3, -2, -1, 0, 0, 1, 2, 3), 0).forEach { it.log() }
+    }
+
+    /**
+     * 18. 四数之和
+     * 给你一个由 n 个整数组成的数组nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组[nums[a], nums[b], nums[c], nums[d]]（若两个四元组元素一一对应，则认为两个四元组重复）：
+     * 0 <= a, b, c, d< n
+     * a、b、c 和 d 互不相同
+     * nums[a] + nums[b] + nums[c] + nums[d] == target
+     * 你可以按 任意顺序 返回答案 。
+     */
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        val result = arrayListOf<List<Int>>()
+        nums.sort()
+        val size = nums.size
+        for (a in 0..size - 4) {
+            for (b in a + 1..size - 3) {
+                var c = b + 1
+                var d = size - 1
+                while (c < d) {
+                    val sum = nums[a] + nums[b] + nums[c] + nums[d]
+                    if (sum == target) {
+                        val element = arrayListOf(nums[a], nums[b], nums[c], nums[d])
+                        if (!result.contains(element)) {
+                            result.add(element)
+                        }
+                        c++
+                    } else if (sum > target) {
+                        d--
+                    } else {
+                        c++
+                    }
+                }
+            }
+        }
+        return result
     }
 
     private fun random() {
