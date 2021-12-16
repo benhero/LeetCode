@@ -1,6 +1,5 @@
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 
 /**
@@ -14,12 +13,122 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        insertIntoBST()
+        lowestCommonAncestor()
+    }
+
+    fun lowestCommonAncestor() {
+//        lowestCommonAncestor(arrayToTreeNode(6, 2, 8, 0, 4, 7, 9, null, null, 3, 5), TreeNode(2), TreeNode(4))?.log()
+        lowestCommonAncestor(arrayToTreeNode(2, 1), TreeNode(2), TreeNode(1))?.log()
+    }
+
+    /**
+     * 235. 二叉搜索树的最近公共祖先
+     * 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+     * 百度百科中最近公共祖先的定义为：“
+     * 对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，
+     * 满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+     */
+    fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+        var node: TreeNode? = root
+        if (p == null || q == null) {
+            return node
+        }
+        var p = p
+        var q = q
+        if (p.`val` > q.`val`) {
+            val tmp = p
+            p = q
+            q = tmp
+        }
+        while (node != null) {
+            val value = node.`val`
+            if (p.`val` <= value && value <= q.`val`) {
+                return node
+            } else if (p.`val` <= value && value >= q.`val`) {
+                node = node.left
+            } else {
+                node = node.right
+            }
+        }
+        return node
+    }
+
+    fun findTarget() {
+        findTarget(arrayToTreeNode(5, 3, 6, 2, 4, null, 7), 9).log()
+        findTarget(arrayToTreeNode(5, 3, 6, 2, 4, null, 7), 28).log()
+        findTarget(arrayToTreeNode(2, 1, 3), 4).log()
+        findTarget(arrayToTreeNode(2, 1, 3), 1).log()
+        findTarget(arrayToTreeNode(2, 1, 3), 3).log()
+    }
+
+    /**
+     * 653. 两数之和 IV - 输入 BST
+     * 给定一个二叉搜索树 root 和一个目标结果 k，如果 BST 中存在两个元素且它们的和等于给定的目标结果，则返回 true。
+     */
+    fun findTarget(root: TreeNode?, k: Int): Boolean {
+        val set = HashSet<Int>()
+        inOrderTraverse(root, set)
+        set.forEach {
+            if (set.contains(k - it) && k - it != it) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun inOrderTraverse(node: TreeNode?, set: HashSet<Int>) {
+        if (node == null) {
+            return
+        }
+        inOrderTraverse(node.left, set)
+        node.let { set.add(it.`val`) }
+        inOrderTraverse(node.right, set)
+    }
+
+    fun isValidBST() {
+        isValidBST(arrayToTreeNode(4, 2, 6, 1, 3, 5, 7)!!).log()
+
+        // 输入：root = [2,1,3]
+        // 输出：true
+        isValidBST(arrayToTreeNode(2, 1, 3)!!).log()
+
+        // 输入：root = [5,1,4,null,null,3,6]
+        // 输出：false
+        // 解释：根节点的值是 5 ，但是右子节点的值是 4 。
+//        isValidBST(arrayToTreeNode(5, 1, 4, null, null, 3, 6)!!).log()
+
+        // false
+//        isValidBST(arrayToTreeNode(5, 4, 6, null, null, 3, 7)!!).log()
+    }
+
+    /**
+     * 98. 验证二叉搜索树
+     * 给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。
+     */
+    fun isValidBST(root: TreeNode?): Boolean {
+        var node = root
+        val stack: Deque<TreeNode> = LinkedList()
+        var inorder = Int.MIN_VALUE
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                stack.push(node)
+                node = node.left
+            }
+            node = stack.pop()
+//          如果中序遍历得到的节点的值小于等于前一个 inorder，说明不是二叉搜索树
+            if (node.`val` <= inorder) {
+                return false
+            }
+            inorder = node.`val`
+
+            node = node.right
+        }
+        return true
     }
 
     fun insertIntoBST() {
-        insertIntoBST(arrayToTreeNode(4, 2, 7, 1, 3), 5)?.log()
         insertIntoBST(arrayToTreeNode(40, 20, 60, 10, 30, 50, 70), 25)?.log()
+        insertIntoBST(arrayToTreeNode(4, 2, 7, 1, 3), 5)?.log()
     }
 
     /**
