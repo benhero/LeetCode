@@ -1,5 +1,5 @@
 import java.util.*
-import kotlin.collections.HashMap
+
 
 /**
  *
@@ -11,11 +11,22 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        floodFill()
+        maxAreaOfIsland()
     }
 
     fun maxAreaOfIsland() {
-
+        maxAreaOfIsland(
+            arrayOf(
+                intArrayOf(0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0),
+                intArrayOf(1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0),
+                intArrayOf(1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0)
+            )
+        ).log()
     }
 
     /**
@@ -25,9 +36,40 @@ object LessonAlgorithm {
      * 岛屿的面积是岛上值为 1 的单元格的数目。
      * 计算并返回 grid 中最大的岛屿面积。如果没有岛屿，则返回面积为 0 。
      */
-//    fun maxAreaOfIsland(grid: Array<IntArray>): Int {
-//
-//    }
+    fun maxAreaOfIsland(grid: Array<IntArray>): Int {
+        var result = 0
+        for (i in grid.indices) {
+            for (j in grid[0].indices) {
+                // 遍历所有的方块，加入到堆栈中
+                var cur = 0
+                val stacki: Deque<Int> = LinkedList()
+                val stackj: Deque<Int> = LinkedList()
+                stacki.push(i)
+                stackj.push(j)
+                while (!stacki.isEmpty()) {
+                    // 对所有的岛屿进行遍历
+                    val cur_i = stacki.pop()
+                    val cur_j = stackj.pop()
+                    if (cur_i < 0 || cur_j < 0 || cur_i == grid.size || cur_j == grid[0].size || grid[cur_i][cur_j] != 1) {
+                        // 判断位置是否越界 && 是否为海洋
+                        continue
+                    }
+                    cur++
+                    grid[cur_i][cur_j] = 0
+                    val di = intArrayOf(0, 0, 1, -1)
+                    val dj = intArrayOf(1, -1, 0, 0)
+                    for (index in 0..3) {
+                        val next_i = cur_i + di[index]
+                        val next_j = cur_j + dj[index]
+                        stacki.push(next_i)
+                        stackj.push(next_j)
+                    }
+                }
+                result = Math.max(result, cur)
+            }
+        }
+        return result
+    }
 
     fun floodFill() {
         // 输入:
