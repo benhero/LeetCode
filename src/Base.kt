@@ -9,7 +9,64 @@ import java.util.*
 object Base {
     @JvmStatic
     fun main(args: Array<String>) {
-        searchInsert()
+        val l = System.currentTimeMillis()
+        test()
+        "总共耗时：${(System.currentTimeMillis() - l)} 毫秒".log()
+    }
+
+    fun test() {
+        maxSubArraySum()
+    }
+
+    //**************************** 动态规划 ****************************//
+    /**
+     * 返回最长的递增子序列（不需要连续）的长度
+     */
+    fun maxSubArray(nums: IntArray): Int {
+        val array = IntArray(nums.size) { 1 }
+        for (i in nums.size - 1 downTo 0) { // i -> 4, 3, 2, 1, 0
+            for (j in i + 1 until nums.size) { // j -> i后面的值
+                if (nums[j] > nums[i]) {
+                    array[i] = Math.max(array[i], array[j] + 1)
+                }
+            }
+        }
+        array.log()
+        return array.maxOf { it }
+    }
+
+    fun maxSubArray() {
+        val nums = intArrayOf(1, 5, 2, 4, 3)
+        nums.log()
+        maxSubArray(nums).log()
+    }
+
+    /**
+     * 剑指 Offer 42. 连续子数组的最大和
+     * 连续子序列最大和
+     */
+    fun maxSubArraySum(nums: IntArray): Int {
+        // 每个位置代表该位置作为出发点的最大值
+        val array = nums.copyOf()
+        for (i in nums.size - 2 downTo 0) {
+            // 从倒数第二个开始数
+            if (array[i + 1] > 0) {
+                // 如果它的下一位的值>0，那么加上他作为自己的值
+                array[i] = array[i + 1] + nums[i]
+            }
+        }
+//        array.log()
+        array.sort()
+        return array[array.size - 1]
+//        return array.maxOf { it }
+    }
+
+    fun maxSubArraySum() {
+//        val nums = intArrayOf(3, -4, 2, -1, 2, 6, -5, 4)
+        val nums = intArrayOf(-2, 1, -3, 4, -1, 2, 1, -5, 4)
+//        val nums = intArrayOf(1, 1, 2, 3)
+        nums.log()
+        maxSubArraySum(nums).log()
     }
 
     //**************************** 二分法 ****************************//
