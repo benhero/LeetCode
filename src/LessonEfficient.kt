@@ -7,8 +7,21 @@
 object LessonEfficient {
     @JvmStatic
     fun main(args: Array<String>) {
-        climbStairs()
+        canPartition()
     }
+
+    fun canPartition() {
+
+    }
+
+    /**
+     * 416. 分割等和子集
+     * 给你一个 只包含正整数 的 非空 数组 nums 。
+     * 请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+     */
+//    fun canPartition(nums: IntArray): Boolean {
+//
+//    }
 
     fun climbStairs() {
         // 输入： 2
@@ -74,7 +87,11 @@ object LessonEfficient {
         // 输出：3
         // 解释：F(4) = F(3) + F(2) = 2 + 1 = 3
         fib(4).log()
+
+        // 5
         fib(5).log()
+
+        // 8
         fib(6).log()
 
     }
@@ -93,15 +110,17 @@ object LessonEfficient {
         } else if (n == 1) {
             return 1
         }
-        var a = 0
-        var b = 1
-        var c = 0
-        for (i in 1 until n) {
-            c = a + b
-            a = b
-            b = c
-        }
-        return c
+//        var a = 0
+//        var b = 1
+//        var c = 0
+//        for (i in 1 until n) {
+//            c = a + b
+//            a = b
+//            b = c
+//        }
+//        return c
+
+        return fib(n - 1) + fib(n - 2)
     }
 
 
