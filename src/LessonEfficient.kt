@@ -1,3 +1,5 @@
+import java.util.*
+
 /**
  *
  * 高效制胜
@@ -7,7 +9,103 @@
 object LessonEfficient {
     @JvmStatic
     fun main(args: Array<String>) {
-        canPartition()
+        nextGreaterElement()
+    }
+
+    fun nextGreaterElement() {
+        // 输入：nums1 = [4,1,2], nums2 = [1,3,4,2].
+        // 输出：[-1,3,-1]
+        nextGreaterElement(intArrayOf(4, 1, 2), intArrayOf(1, 3, 4, 2)).log()
+
+        // 输入：nums1 = [2,4], nums2 = [1,2,3,4].
+        // 输出：[3,-1]
+        nextGreaterElement(intArrayOf(2, 4), intArrayOf(1, 2, 3, 4)).log()
+    }
+
+    /**
+     * 496. 下一个更大元素 I
+     * nums1 中数字 x 的 下一个更大元素 是指 x 在 nums2 中对应位置 右侧 的 第一个 比 x 大的元素。
+     * 给你两个 没有重复元素 的数组 nums1 和 nums2 ，下标从 0 开始计数，其中nums1 是 nums2 的子集。
+     * 对于每个 0 <= i < nums1.length ，找出满足 nums1[i] == nums2[j] 的下标 j ，
+     * 并且在 nums2 确定 nums2[j] 的 下一个更大元素 。如果不存在下一个更大元素，那么本次查询的答案是 -1 。
+     * 返回一个长度为 nums1.length 的数组 ans 作为答案，满足 ans[i] 是如上所述的 下一个更大元素 。
+     */
+    fun nextGreaterElement(nums1: IntArray, nums2: IntArray): IntArray {
+        val map = mutableMapOf<Int, Int>()
+        // 单调栈，底部大、顶部小的形式
+        val stack = LinkedList<Int>()
+        nums2.reversed().forEach {
+            // 倒序入栈
+            var top = stack.peek()
+            if (top == null) {
+                stack.push(it)
+            } else {
+                while (top != null) {
+                    if (top < it) {
+                        // 栈顶比当前值小，则出栈
+                        stack.pop()
+                    } else {
+                        map[it] = top
+                        // 栈顶比当前值大，则入栈
+                        stack.push(it)
+                        break
+                    }
+                    top = stack.peek()
+                }
+                if (top == null) {
+                    stack.push(it)
+                }
+            }
+        }
+        val result = IntArray(nums1.size)
+        nums1.forEachIndexed { index, i ->
+            result[index] = map[i] ?: -1
+        }
+        return result
+    }
+
+    fun getRow() {
+        // 输入: rowIndex = 0
+        // 输出: [1]
+        getRow(0).log()
+        // 输入: rowIndex = 1
+        // 输出: [1,1]
+        getRow(1).log()
+        getRow(2).log()
+        // 输入: rowIndex = 3
+        // 输出: [1,3,3,1]
+        getRow(3).log()
+        getRow(4).log()
+    }
+
+    /**
+     * 119. 杨辉三角 II
+     * 给定一个非负索引 rowIndex，返回「杨辉三角」的第 rowIndex 行。
+     * 在「杨辉三角」中，每个数是它左上方和右上方的数的和。
+     */
+    fun getRow(rowIndex: Int): List<Int> {
+        if (rowIndex == 0) {
+            return arrayListOf(1)
+        } else if (rowIndex == 1) {
+            return arrayListOf(1, 1)
+        }
+        val tempList = arrayListOf(1, 1)
+        val result = arrayListOf<Int>()
+        for (i in 0..rowIndex) {
+            for (j in 0..i) {
+                if (j == 0) {
+                    result.clear()
+                    result.add(1)
+                } else if (j == i) {
+                    result.add(1)
+                    tempList.clear()
+                    tempList.addAll(result)
+                } else {
+                    result.add(tempList[j - 1] + tempList[j])
+                }
+            }
+        }
+        return result
     }
 
     fun canPartition() {
