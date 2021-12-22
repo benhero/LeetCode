@@ -11,16 +11,62 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        mergeTrees()
+        connect()
+    }
+
+    fun connect() {
+        connect(arrayToNodeList2(1, 2, 3, 4, 5, 6, 7))?.log()
+    }
+
+    /**
+     * 116. 填充每个节点的下一个右侧节点指针
+     * 填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
+     */
+    fun connect(root: Node?): Node? {
+        val stack = mutableListOf<Node>()
+        stack.add(root!!)
+        val nextStack = mutableListOf<Node>()
+        var lastNode: Node? = null
+        while (stack.isNotEmpty() || nextStack.isNotEmpty()) {
+
+            if (stack.isNotEmpty()) {
+                val pop = stack[0]
+                stack.removeAt(0)
+                lastNode?.next = pop
+                lastNode = pop
+
+                pop.left?.let { nextStack.add(pop.left!!) }
+                pop.right?.let { nextStack.add(pop.right!!) }
+            } else {
+                lastNode = null
+                stack.addAll(nextStack)
+                nextStack.clear()
+            }
+        }
+        return root
     }
 
     fun mergeTrees() {
-
+        mergeTrees(arrayToTreeNode(1, 3, 2, 5), arrayToTreeNode(2, 1, 3, null, 4, null, 7))?.log()
     }
 
-//    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
-//
-//    }
+    /**
+     * 617. 合并二叉树
+     * 给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
+     * 你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为NULL 的节点将直接作为新二叉树的节点。
+     */
+    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
+        if (root1 == null) {
+            return root2
+        }
+        if (root2 == null) {
+            return root1
+        }
+        val result = TreeNode(root1.`val` + root2.`val`)
+        result.left = mergeTrees(root1.left, root2.left)
+        result.right = mergeTrees(root1.right, root2.right)
+        return result
+    }
 
     fun maxAreaOfIsland() {
         maxAreaOfIsland(
@@ -820,23 +866,59 @@ object LessonAlgorithm {
         return l
     }
 
-    class Node(var value: Int) {
+    class Node(var `val`: Int) {
         var next: Node? = null
+
+        var left: Node? = null
+        var right: Node? = null
 
         fun log() {
             print("[")
-            print(value)
+            print(`val`)
             var n: Node? = next
             while (n != null) {
                 print(" , ")
-                print(n.value)
+                print(n.`val`)
                 n = n.next
             }
             println("]")
         }
     }
 
-    fun arrayToNodeList(array: IntArray): Node? {
+    fun arrayToNodeList2(vararg array: Int): Node? {
+        if (array.isEmpty()) {
+            return null
+        }
+        val linkedList = LinkedList<Node>()
+        val root = Node(array[0]!!)
+        if (array.size == 1) {
+            return root
+        }
+        linkedList.add(root)
+
+        var i = 1
+        while (i < array.size) {
+            var node = array[i]?.let { Node(it) }
+            val removeFirst = linkedList.removeFirst()
+
+            removeFirst.left = node
+            node?.let { linkedList.add(it) }
+
+            i++
+            if (i == array.size) {
+                break
+            }
+
+            node = array[i]?.let { Node(it) }
+            removeFirst.right = node
+            i++
+            node?.let { linkedList.add(it) }
+        }
+
+        return root
+    }
+
+    fun arrayToNodeList(vararg array: Int): Node? {
         val head: Node = Node(-1)
         var index: Node = head
         array.forEach {
