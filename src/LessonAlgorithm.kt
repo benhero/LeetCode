@@ -11,7 +11,169 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        connect()
+        hammingWeight()
+    }
+
+    fun hammingWeight() {
+        hammingWeight(3).log()
+    }
+
+    /**
+     * 191. 位1的个数
+     */
+    fun hammingWeight(n: Int): Int {
+        var result = 0
+        var nn = n
+        while (nn != 0) {
+            nn = nn and (nn - 1)
+            result++
+        }
+        return result
+    }
+
+    fun isPowerOfTwo() {
+        isPowerOfTwo(2).log()
+        isPowerOfTwo(4).log()
+    }
+
+    /**
+     * 231. 2 的幂
+     */
+    fun isPowerOfTwo(n: Int): Boolean {
+        return n > 0 && (n and (n - 1)) == 0
+    }
+
+    var dr = intArrayOf(-1, 0, 1, 0)
+    var dc = intArrayOf(0, -1, 0, 1)
+
+    fun orangesRotting(grid: Array<IntArray>): Int {
+        val R = grid.size
+        val C = grid[0].size
+        val queue: Queue<Int> = ArrayDeque()
+        val depth: MutableMap<Int, Int> = HashMap()
+        for (r in 0 until R) {
+            for (c in 0 until C) {
+                if (grid[r][c] == 2) {
+                    val code = r * C + c
+                    queue.add(code)
+                    depth[code] = 0
+                }
+            }
+        }
+        var ans = 0
+        while (!queue.isEmpty()) {
+            val code = queue.remove()
+            val r = code / C
+            val c = code % C
+            for (k in 0..3) {
+                val nr = r + dr[k]
+                val nc = c + dc[k]
+                if (0 <= nr && nr < R && 0 <= nc && nc < C && grid[nr][nc] == 1) {
+                    grid[nr][nc] = 2
+                    val ncode = nr * C + nc
+                    queue.add(ncode)
+                    depth[ncode] = depth[code]!! + 1
+                    ans = depth[ncode]!!
+                }
+            }
+        }
+        for (row in grid) {
+            for (v in row) {
+                if (v == 1) {
+                    return -1
+                }
+            }
+        }
+        return ans
+    }
+
+    fun updateMatrix() {
+        // 输入：mat = [[0,0,0],[0,1,0],[0,0,0]]
+        // 输出：[[0,0,0],[0,1,0],[0,0,0]]
+
+        updateMatrix(
+            arrayOf(
+                intArrayOf(0, 0, 0),
+                intArrayOf(0, 1, 0),
+                intArrayOf(0, 0, 0),
+            )
+        )
+
+        // 输入：mat = [[0,0,0],[0,1,0],[1,1,1]]
+        // 输出：[[0,0,0],[0,1,0],[1,2,1]]
+
+    }
+
+    /**
+     * 542. 01 矩阵
+     */
+    fun updateMatrix(mat: Array<IntArray>): Array<IntArray> {
+        // 先记录所有0的位置
+        val zeroList = mutableListOf<IntArray>()
+        val result = Array(mat.size) { IntArray(mat[0].size) { Int.MAX_VALUE } }
+        mat.forEachIndexed { row, array ->
+            array.forEachIndexed { column, value ->
+                if (value == 0) {
+                    zeroList.add(intArrayOf(column, row))
+                    result[row][column] = 0
+                }
+            }
+        }
+
+        while (zeroList.isNotEmpty()) {
+            val cell = zeroList.removeAt(0)
+            for (i in 0 until 4) {
+                val newColumn = cell[0] + dColumn[i]
+                val newRow = cell[1] + dRow[i]
+                if (isSafe(result, newRow, newColumn)) {
+                    // 位置安全
+                    val value = result[newRow][newColumn]
+                    if (value != 0) {
+                        // 原本是1的值
+
+                    }
+
+                }
+            }
+        }
+
+
+        zeroList.forEach { it.log() }
+        return arrayOf()
+    }
+
+    fun updateMatrix2(mat: Array<IntArray>): Array<IntArray> {
+        val m = mat.size
+        val n = mat[0].size
+        val dist = Array(m) { IntArray(n) }
+        val seen = Array(m) { BooleanArray(n) }
+        val zeroList = mutableListOf<IntArray>()
+        // 将所有的 0 添加进初始队列中
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (mat[i][j] == 0) {
+                    zeroList.add(intArrayOf(i, j))
+                    seen[i][j] = true
+                }
+            }
+        }
+
+        // 广度优先搜索
+        while (zeroList.isNotEmpty()) {
+            val cell = zeroList.removeAt(0)
+            val i = cell[0]
+            val j = cell[1]
+            for (d in 0..3) {
+                val ni: Int = i + dColumn[d]
+                val nj: Int = j + dRow[d]
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n && !seen[ni][nj]) {
+                    dist[ni][nj] = dist[i][j] + 1
+                    zeroList.add(intArrayOf(ni, nj))
+                    seen[ni][nj] = true
+                }
+            }
+        }
+        return dist
     }
 
     fun connect() {
@@ -181,9 +343,9 @@ object LessonAlgorithm {
         return image
     }
 
+    val queue = LinkedList<IntArray>()
     val dRow = intArrayOf(1, 0, 0, -1)
     val dColumn = intArrayOf(0, 1, -1, 0)
-    val queue = LinkedList<IntArray>()
     fun floodFillDfs(image: Array<IntArray>, sr: Int, sc: Int, oldColor: Int, newColor: Int) {
         if (image[sr][sc] == oldColor) {
             image[sr][sc] = newColor
