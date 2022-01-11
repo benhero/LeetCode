@@ -11,7 +11,53 @@ object LessonAlgorithm {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        hammingWeight()
+        singleNumber()
+    }
+
+    fun singleNumber() {
+        singleNumber(intArrayOf(0, 0, 2, 2, 3, 4, 4)).log()
+        singleNumber(intArrayOf(4, 1, 2, 1, 2)).log()
+    }
+
+    /**
+     * 136. 只出现一次的数字
+     */
+    fun singleNumber(nums: IntArray): Int {
+        nums.sort()
+        var result = nums[0]
+        var countDown = 1
+        nums.forEach {
+            if (result != it) {
+                if (countDown == 0) {
+                    return result
+                } else {
+                    countDown = 1
+                }
+            }
+            countDown--
+            result = it
+        }
+        return result
+    }
+
+    fun reverseBits() {
+        reverseBits(1210061376).log()
+    }
+
+    /**
+     * 190. 颠倒二进制位
+     */
+    fun reverseBits(n: Int): Int {
+        var result = 0
+        var temp = n
+        for (i in 0 until 32) {
+            result = result or ((temp and 1) shl (31 - i))
+            temp = temp shr 1
+            if (temp == 0) {
+                return result
+            }
+        }
+        return result
     }
 
     fun hammingWeight() {
