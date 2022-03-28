@@ -190,6 +190,7 @@ object Base {
         queue.add(root)
         while (queue.isNotEmpty()) {
             val list = arrayListOf<Int>()
+            // 用于限制缓存队列里，对于当前层需要遍历多少的问题
             val size = queue.size
 
             for (i in 0 until size) {
@@ -199,7 +200,6 @@ object Base {
                 node.left?.let {
                     // 找到下一层的节点，并加入到待遍历的队列
                     queue.add(it)
-
                 }
                 node.right?.let {
                     queue.add(it)
