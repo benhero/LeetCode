@@ -13,7 +13,7 @@ object LessonDS {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        lowestCommonAncestor()
+        invertTree()
     }
 
     fun lowestCommonAncestor() {
@@ -201,7 +201,9 @@ object LessonDS {
         if (root == null) {
             return false
         }
+        // 用于存放节点
         val queue = LinkedList<TreeNode>()
+        // 用于到达该节点时的路径值
         val sumList = LinkedList<Int>()
         queue.add(root)
         sumList.add(root.`val`)
@@ -255,10 +257,17 @@ object LessonDS {
 //        }
 
         // 方案2：递归
-        val left = invertTree(root.left)
-        val right = invertTree(root.right)
-        root.left = right
-        root.right = left
+//        val left = invertTree(root.left)
+//        val right = invertTree(root.right)
+//        root.left = right
+//        root.right = left
+
+        // 方案3：递归先翻转
+        val l = root.left
+        root.left = root.right
+        root.right = l
+        invertTree(root.left)
+        invertTree(root.right)
 
         return root
     }
@@ -429,6 +438,22 @@ object LessonDS {
             return result
         }
 
+        fun preorderTraversal2(root: TreeNode?): List<Int> {
+            val stack = LinkedList<TreeNode>()
+            val result = arrayListOf<Int>()
+            stack.push(root)
+            while (!stack.isEmpty()) {
+                val node = stack.pop()
+                // 取出则加入到结果里
+                node?.let{result.add(node.`val`)}
+                // 先加右节点到栈里
+                node?.right?.let {stack.push(it)}
+                // 再加右节点到栈里
+                node?.left?.let {stack.push(it)}
+            }
+            return result
+        }
+
         /**
          * 94. 二叉树的中序遍历
          */
@@ -436,6 +461,28 @@ object LessonDS {
             root?.left?.let { inorderTraversal(it) }
             root?.`val`?.let { result.add(it) }
             root?.right?.let { inorderTraversal(it) }
+            return result
+        }
+
+        /**
+         * 94. 二叉树的中序遍历 => 迭代法
+         */
+        fun inorderTraversal2(root: TreeNode?): List<Int> {
+            val stack = LinkedList<TreeNode>()
+            val result = arrayListOf<Int>()
+            var cur = root
+            while (cur != null || !stack.isEmpty()) {
+                if (cur != null) {
+                    // 当前节点非空，则向左遍历到底 =》 到底时则cur为空
+                    stack.push(cur)
+                    cur = cur.left
+                } else {
+                    // 从栈里取出对象，加入到队列里，并向右遍历
+                    cur = stack.pop()
+                    result.add(cur.`val`)
+                    cur = cur.right
+                }
+            }
             return result
         }
 
@@ -468,6 +515,20 @@ object LessonDS {
             }
             return result
         }
+    }
+
+    fun postorderTraversal(root: TreeNode?): List<Int> {
+        val result = arrayListOf<Int>()
+        val stack = LinkedList<TreeNode>()
+        stack.push(root)
+        while (!stack.isEmpty()) {
+            val pop = stack.pop()
+            pop?.let{result.add(it.`val`)}
+            pop?.left?.let{stack.push(it)}
+            pop?.right?.let{stack.push(it)}
+        }
+        result.reverse()
+        return result
     }
 
     class TreeNode(var `val`: Int) {
